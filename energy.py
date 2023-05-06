@@ -25,25 +25,24 @@ def hamilton(spins, J):
     for i in range(N): 
         for j in range(N):
             # We implement periodic boundary conditions here
-            # using the function p
-            # Problem here - overcounting. Fix this. 
-            E +=  spins[i][j]*spins[p(i+1,N)][j] + spins[i][j]*spins[p(i-1,N)][j]  +  spins[i][j]*spins[i][p(j+1,N)]  +  spins[i][j]*spins[i][p(j-1,N)]  
+            # using modulo
+            E +=  spins[i][j]*spins[(i+1)%N][j] + spins[i][j]*spins[(i-1)%N][j]  +  spins[i][j]*spins[i][(j+1)%N]  +  spins[i][j]*spins[i][(j-1)%N]  
     
-    return -J*E/2 # Does the /2 fix the overcounting?
+    return -J*E/2 # 2 for overcounting - each pair is counted twice.
 
 
-def energy_update(spins, J, flip):
+def energy_update(NN, J, N):
     '''
     Function to calculate the energy difference between given 
     configuration and the resulting configuration with (i,j)-th spin flipped
 
-    Can be simplified - we dont need to know the entire spins data - just the 4 n.n.s would do
+    NN is the combined set of nearest neighbours of NN[1:] and the middle spin NN[0]
+    N is the number of lattice points along an edge
+    J is the coupling energy
     '''
-    N = np.size(spins,axis=0)
-    i,j = flip
 
     # Calculating energy contribution of the (i,j)th spin via nearest neighbour couplings
-    del_E = -J * (spins[i][j]*spins[p(i+1,N)][j] + spins[i][j]*spins[p(i-1,N)][j]  +  spins[i][j]*spins[i][p(j+1,N)]  +  spins[i][j]*spins[i][p(j-1,N)])
+    del_E = -J * NN[0] * np.sum(NN[1:])
 
     # We flip the (i,j) th spin to get -del_E as the new energy contribution. 
     # Thus, the difference in energy between the two states (flipped - original) is

@@ -4,6 +4,7 @@ import energy
 import montecarlo
 import thermodynamics as td
 import os
+import time
 
 # We are setting k=J=1 for the simulations #
 
@@ -15,11 +16,12 @@ then use the stored data to calculate Thermodynamics properties '''
 ## MONTE CARLO PARAMETERS ##
 t_eq = 10**3 # equilibriation time
 t_a = 10**2 # Autocorrelation time (time between collection of samples)
-N = [10,20,30] # Some chosen values for number of spins along a row/column
-n = 10**4 # number of samples collected
+N = [30] #[10,20,30, # Some chosen values for number of spins along a row/column
+n = 100 # number of samples collected
 T = t_eq + n*t_a # Total monte carlo time
 
-Temp = np.arange(start=0.1,stop = 5.1, step = 0.1, dtype=float) # temperatures
+dt = 0.1
+Temp = np.arange(start=0.1,stop = 5.1, step = dt, dtype=float) # temperatures
 
 
 store_disk = True # For storing samples to disk
@@ -55,7 +57,12 @@ if store_disk:
             os.mkdir(temp_dir2)
 
             for t in range(T): 
+                start = time.time()
                 lattice,energy_change = montecarlo.mcCycle(lattice, size, Temp[temp_index]) # 1 MC cycle
+                end = time.time()
+                if t==0 and temp_index==0:
+                    print("Time taken for one MC Cycle: ", start-end)
+                    print('This will be repeated T = ',T)
                 #if t==t_eq: 
                     #print('Equilibrium has been reached')
                 #    if not snap:
@@ -71,7 +78,11 @@ if store_disk:
                     '''
                     if r>0:
                         path =  temp_dir2 + "n=" + str(r)+".csv"
+                        start = time.time()
                         np.savetxt(path, lattice, delimiter=' ')
+                        end = time.time()
+                        if r==0: 
+                            print('time for saving - ',(start-end))
             '''
             spon_mag_per_spin[temp_index] /= n# Obtaining ensemble average (/n) 
             spon_mag_per_spin[temp_index] = np.abs(spon_mag_per_spin[temp_index])
