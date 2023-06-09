@@ -1,6 +1,12 @@
 import numpy as np
 import energy
-# Script for calculating thermodynamic quantities
+
+'''
+Script for calculating thermodynamic quantities -
+Also add functions for calculating Entropy, partition function, etc etc.
+Also, calculation of critical exponents.
+'''
+
 
 def magnetisation(lattice):
     net = np.sum(lattice == 1) - np.sum(lattice == -1)
@@ -9,6 +15,7 @@ def magnetisation(lattice):
 
 def mag_susc(mags,n,T):
     '''
+    magnetic susceptibility
     mags - set of magnetisations of equilibrium configurations collected at a temperature t
     n - number of spins!
     t - temperature

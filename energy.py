@@ -19,7 +19,7 @@ def p(i,N):
     return pos
     
 
-def hamilton(spins, J):
+def hamilton(spins, J=1):
     N = np.size(spins,axis = 0) # Number of spins N
     E = 0
     for i in range(N): 
