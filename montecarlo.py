@@ -60,7 +60,7 @@ def Wolff(lattice,beta):
 
             for pos in nn:
                 if lattice[pos] == cluster_spin: 
-                    pos_already_included = pos in cluster
+                    pos_already_included = pos in cluster or pos in stack
                     if not pos_already_included:    
                         z = np.random.random(size= 1)
                         if z < 1 - np.exp(-2*beta):
@@ -74,6 +74,4 @@ def Wolff(lattice,beta):
         #print(len(stack))
 
     # Return the updated lattice, and the cluster used in the iteration.
-    # The function set is used because there might be duplicates in the cluster list above
-    # Figure out why this happens (tho this is not a cause of concern and the results come correctly)
-    return lattice, set(cluster)
+    return lattice, cluster
