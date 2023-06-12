@@ -74,4 +74,6 @@ def Wolff(lattice,beta):
         #print(len(stack))
 
     # Return the updated lattice, and the cluster used in the iteration.
-    return lattice, cluster 
+    # The function set is used because there might be duplicates in the cluster list above
+    # Figure out why this happens (tho this is not a cause of concern and the results come correctly)
+    return lattice, set(cluster)
